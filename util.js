@@ -15,3 +15,8 @@ function matrixToArray(matrix) {
 /*const matrix = arrayToMatrix([0,0,1,0,0,2,0,0,3], 3);
 console.log(matrix);
 console.log(matrixToArray(matrix));*/
+
+module.exports = {
+    arrayToMatrix: arrayToMatrix,
+    matrixToArray: matrixToArray
+};
