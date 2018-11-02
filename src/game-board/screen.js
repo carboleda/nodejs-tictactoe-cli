@@ -32,7 +32,7 @@ function updateCursor(newCursor) {
     const mCursors = Utilities.getCursors(GAMER_CHAR);
 
     //Si la casilla nueva no esta checkeada
-    console.log('NEW', cursor.currentPosition, boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x]);
+    //console.log('NEW', cursor.currentPosition, boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x]);
     if(mMarkers.indexOf(boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x]) === -1) {
         //Asignar el cursor a la posicion actual
         boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = GAMER_CHAR[`${GAMER}_CURSOR`];
@@ -63,6 +63,12 @@ function markPosition() {
 }
 
 function updateBoardDataMatrix(newBoardDataMatrix) {
+    if(newBoardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] === UNSELECTED_POSITION) {
+        newBoardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = `${GAMER_CHAR[`${GAMER}_CURSOR`]}`;
+    } else {
+        newBoardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x]
+            = newBoardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x].bold.yellow;
+    }
     boardDataMatrix = newBoardDataMatrix;
     drawScreen();
 }
@@ -94,17 +100,19 @@ function drawScreen() {
         Board.push(row);
     });
     console.log('..::Tic Tac Toe::..'.bold.green);
-    console.log('Gamer:'.bold, GAMER.bold.blue);
+    console.log('Gamer Nick:'.bold, GAMER.bold.blue);
     const cursorChar = GAMER_CHAR[`${GAMER}_CURSOR`];
     const markChar = GAMER_CHAR[`${GAMER}_MARK`];
     console.log('Controlls:'.bold, 'Cursor:'.bold, `${cursorChar},`, 'Mark:'.bold, markChar);
     const { currentPosition } = cursor;
-    console.log('Current position:'.bold, 'X:'.bold, `${currentPosition.x}`.bold.blue, 'Y:'.bold, `${currentPosition.y}`.bold.magenta);
+    console.log('Current position:'.bold,
+        'X:'.bold, `${currentPosition.x}`.bold.blue,
+        'Y:'.bold, `${currentPosition.y}`.bold.magenta);
     console.log('');
     console.log(Board.toString());
     console.log('');
-    console.log('How use?'.bold);
-    console.log('* Press up, down, left and right keys for move pointer');
+    console.log('How to use it?'.bold);
+    console.log('* Press up, down, left and right keys for move cursor');
     console.log('* Press enter for mark a position');
     console.log('* Press ctrl + c to exit');
 }

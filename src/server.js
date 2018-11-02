@@ -9,13 +9,7 @@ let gamers = {
 };
 
 function getGamerPlace() {
-    if(!gamers['1']) {
-        return '1';
-    } else if(!gamers['2']) {
-        return '2';
-    }
-
-    return null;
+    return Object.keys(gamers).find(place => gamers[place] === null);
 }
 
 function resetGame() {
