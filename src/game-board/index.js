@@ -1,16 +1,14 @@
-const Utilities = require('./helpers/utilities');
-const { GAME_SIZE } = require('./helpers/constants');
-const Screen = require('./game-board/screen');
-const events = require('./game-board/events')(Screen, {
+const Utilities = require('../helpers/utilities');
+const { GAME_SIZE } = require('../helpers/constants');
+const Screen = require('./screen');
+const events = require('./events')(Screen, {
     onMarkPosition
 });
-const socketConnection = require('./game-board/socket-connection')({
+const socketConnection = require('./socket-connection')({
     onInit,
     onReciveMarkPosition,
     onGameIsFull
 });
-
-events.initKeypressListener();
 
 function onInit(config) {
     config.boardData = Utilities.arrayToMatrix(config.boardData, GAME_SIZE);
@@ -29,3 +27,11 @@ function onMarkPosition() {
     const boardDataMatrix = Screen.getBoardDataMatrix();
     socketConnection.emitPositionMarked(Utilities.matrixToArray(boardDataMatrix));
 }
+
+function startGame() {
+    events.initKeypressListener();
+}
+
+module.exports = {
+    startGame
+};
