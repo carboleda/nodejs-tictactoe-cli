@@ -4,11 +4,8 @@ const Screen = require('./screen');
 const events = require('./events')(Screen, {
     onMarkPosition
 });
-const socketConnection = require('./socket-connection')({
-    onInit,
-    onReciveMarkPosition,
-    onGameIsFull
-});
+const SocketConnection = require('./socket-connection');
+let mySocketConnection;
 
 function onInit(config) {
     config.boardData = Utilities.arrayToMatrix(config.boardData, GAME_SIZE);
@@ -20,12 +17,25 @@ function onReciveMarkPosition(gameArray) {
 }
 
 function onGameIsFull() {
-    Screen.showMessage('No hay cupo en este juego');
+    Screen.showMessage('There is places in this match');
+}
+
+function onWaitingPlayer() {
+    Screen.showMessage('Waiting a player...');
 }
 
 function onMarkPosition() {
     const boardDataMatrix = Screen.getBoardDataMatrix();
-    socketConnection.emitPositionMarked(Utilities.matrixToArray(boardDataMatrix));
+    mySocketConnection.emitPositionMarked(Utilities.matrixToArray(boardDataMatrix));
+}
+
+function setConnection(socket) {
+    mySocketConnection = SocketConnection(socket, {
+        onInit,
+        onReciveMarkPosition,
+        onGameIsFull,
+        onWaitingPlayer
+    });
 }
 
 function startGame() {
@@ -33,5 +43,6 @@ function startGame() {
 }
 
 module.exports = {
+    setConnection,
     startGame
 };

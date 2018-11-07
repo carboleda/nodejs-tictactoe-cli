@@ -32,6 +32,11 @@ function getMarkers(markers) {
     return [ ...normal, ...colors ];
 }
 
+//https://gist.github.com/KenanSulayman/4990953
+function clearScreen() {
+    return process.stdout.write('\033c');
+}
+
 /*const matrix = arrayToMatrix([0,0,1,0,0,2,0,0,3], 3);
 console.log(matrix);
 console.log(matrixToArray(matrix));*/
@@ -41,5 +46,6 @@ module.exports = {
     matrixToArray,
     stripColors,
     getCursors,
-    getMarkers
+    getMarkers,
+    clearScreen
 };

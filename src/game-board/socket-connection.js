@@ -1,14 +1,11 @@
-module.exports = function(options) {
-    const Utilities = require('../helpers/utilities');
-    const io = require('socket.io-client');
-    const config = require('../../config/config.json');
-    const socket = io.connect(config.server);
-
+module.exports = function(socket, options) {
     socket.on('init', options.onInit);
 
     socket.on('position marked', options.onReciveMarkPosition);
 
     socket.on('game full', options.onGameIsFull);
+
+    socket.on('waiting player', options.onWaitingPlayer);
 
     socket.on('disconnect', function() {
 

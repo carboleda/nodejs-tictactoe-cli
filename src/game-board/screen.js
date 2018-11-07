@@ -6,6 +6,7 @@ const Utilities = require('../helpers/utilities');
 const Board = new Table(config.board);
 let UNSELECTED_POSITION;
 let GAMER;
+let nickName;
 let boardDataMatrix = [];
 let cursor = {
     currentPosition: { x: 1, y: 1 },
@@ -18,6 +19,7 @@ function setConfig(config) {
         const { number, unselectedPosition, boardData } = config;
         GAMER = `GAMER${number}`;
         UNSELECTED_POSITION = `${unselectedPosition}`;
+        nickName = config.nickName;
         boardDataMatrix = boardData;
         boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = `${GAMER_CHAR[`${GAMER}_CURSOR`]}`;
         drawScreen();
@@ -74,7 +76,7 @@ function updateBoardDataMatrix(newBoardDataMatrix) {
 }
 
 function showMessage(msg) {
-    clearScreen();
+    Utilities.clearScreen();
     console.log(msg.bold.red);
 }
 
@@ -86,13 +88,8 @@ function getBoardDataMatrix() {
     return boardDataMatrix;
 }
 
-//https://gist.github.com/KenanSulayman/4990953
-function clearScreen() {
-    return process.stdout.write('\033c');
-}
-
 function drawScreen() {
-    clearScreen();
+    Utilities.clearScreen();
     // table is an Array, so you can `push`, `unshift`, `splice` and friends
     // Se eliminan todo el contenido del Board
     Board.splice(0);
@@ -100,7 +97,7 @@ function drawScreen() {
         Board.push(row);
     });
     console.log('..::Tic Tac Toe::..'.bold.green);
-    console.log('Gamer Nick:'.bold, GAMER.bold.blue);
+    console.log('Gamer Nick:'.bold, nickName.bold.blue);
     const cursorChar = GAMER_CHAR[`${GAMER}_CURSOR`];
     const markChar = GAMER_CHAR[`${GAMER}_MARK`];
     console.log('Controlls:'.bold, 'Cursor:'.bold, `${cursorChar},`, 'Mark:'.bold, markChar);
@@ -125,6 +122,6 @@ module.exports = {
     showMessage,
     getCursor,
     getBoardDataMatrix,
-    clearScreen,
+    clearScreen: Utilities.clearScreen,
     drawScreen,
 };

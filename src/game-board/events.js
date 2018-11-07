@@ -1,7 +1,8 @@
+//https://thisdavej.com/making-interactive-node-js-console-apps-that-listen-for-keypress-events/
+const readline = require('readline');
+
 module.exports = function(Screen, options) {
     function initKeypressListener() {
-        //https://thisdavej.com/making-interactive-node-js-console-apps-that-listen-for-keypress-events/
-        const readline = require('readline');
         readline.emitKeypressEvents(process.stdin);
         process.stdin.setRawMode(true);
         process.stdin.on('keypress', (str, key) => {
