@@ -7,6 +7,8 @@ const Board = new Table(config.board);
 let UNSELECTED_POSITION;
 let GAMER;
 let nickName;
+let playerPlace;
+let currentTurn;
 let boardDataMatrix = [];
 let cursor = {
     currentPosition: { x: 1, y: 1 },
@@ -15,15 +17,15 @@ let cursor = {
 };
 
 function setConfig(config) {
-    if(!GAMER) {
-        const { number, unselectedPosition, boardData } = config;
-        GAMER = `GAMER${number}`;
-        UNSELECTED_POSITION = `${unselectedPosition}`;
-        nickName = config.nickName;
-        boardDataMatrix = boardData;
-        boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = `${GAMER_CHAR[`${GAMER}_CURSOR`]}`;
-        drawScreen();
-    }
+    nickName = config.nickName;
+    playerPlace = config.playerPlace;
+    currentTurn = config.currentTurn;
+    const { unselectedPosition, gameBoardData } = config;
+    GAMER = `GAMER${playerPlace}`;
+    UNSELECTED_POSITION = `${unselectedPosition}`;
+    boardDataMatrix = gameBoardData;
+    boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = `${GAMER_CHAR[`${GAMER}_CURSOR`]}`;
+    drawScreen();
 }
 
 function updateCursor(newCursor) {
@@ -64,7 +66,7 @@ function markPosition() {
     drawScreen();
 }
 
-function updateBoardDataMatrix(newBoardDataMatrix) {
+function updateBoardDataMatrix(newBoardDataMatrix, newCurrentTurn) {
     if(newBoardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] === UNSELECTED_POSITION) {
         newBoardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = `${GAMER_CHAR[`${GAMER}_CURSOR`]}`;
     } else {
@@ -72,6 +74,7 @@ function updateBoardDataMatrix(newBoardDataMatrix) {
             = newBoardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x].bold.yellow;
     }
     boardDataMatrix = newBoardDataMatrix;
+    currentTurn = newCurrentTurn;
     drawScreen();
 }
 
@@ -82,6 +85,10 @@ function showMessage(msg) {
 
 function getCursor() {
     return cursor;
+}
+
+function getPlayerPlace() {
+    return playerPlace;
 }
 
 function getBoardDataMatrix() {
@@ -105,6 +112,9 @@ function drawScreen() {
     console.log('Current position:'.bold,
         'X:'.bold, `${currentPosition.x}`.bold.blue,
         'Y:'.bold, `${currentPosition.y}`.bold.magenta);
+    console.log(currentTurn === playerPlace
+        ? 'ES TU TURNO... 🤔'.bold.green
+        : 'ESPERANDO LA JUGADA... 👀'.bold.red);
     console.log('');
     console.log(Board.toString());
     console.log('');
@@ -121,6 +131,7 @@ module.exports = {
     updateBoardDataMatrix,
     showMessage,
     getCursor,
+    getPlayerPlace,
     getBoardDataMatrix,
     clearScreen: Utilities.clearScreen,
     drawScreen,

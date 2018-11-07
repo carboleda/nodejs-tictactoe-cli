@@ -1,6 +1,6 @@
 //https://thisdavej.com/making-interactive-node-js-console-apps-that-listen-for-keypress-events/
 const readline = require('readline');
-
+let isKeypressListenerPaused = false;
 module.exports = function(Screen, options) {
     function initKeypressListener() {
         readline.emitKeypressEvents(process.stdin);
@@ -8,12 +8,24 @@ module.exports = function(Screen, options) {
         process.stdin.on('keypress', (str, key) => {
             if (key.ctrl && key.name === 'c') {
                 process.exit();
-            } else if (key.name === 'return') {
-                onMarkPosition();
-            } else if(['up', 'down', 'left', 'right'].indexOf(key.name) !== -1) {
-                onMoveCursor(key.name);
+            } else if(!isKeypressListenerPaused) {
+                if (key.name === 'return') {
+                    onMarkPosition();
+                } else if(['up', 'down', 'left', 'right'].indexOf(key.name) !== -1) {
+                    onMoveCursor(key.name);
+                }
+            } else {
+                Screen.drawScreen();
             }
         });
+    }
+
+    function pauseKeypressListener() {
+        isKeypressListenerPaused = true;
+    }
+
+    function resumeKeypressListener() {
+        isKeypressListenerPaused = false;
     }
 
     function onMoveCursor(direction) {
@@ -31,12 +43,11 @@ module.exports = function(Screen, options) {
 
         //Si la anterior y la nueva posición son iguales significa
         //que se intento mover al limite, por lo cual no se hace refresh de la pantalla
-        if(cursor.currentPosition.x == previousPosition.x
-            && cursor.currentPosition.y == previousPosition.y) return;
-
-        cursor.previousPosition = previousPosition;
-
-        Screen.updateCursor(cursor);
+        if(cursor.currentPosition.x != previousPosition.x
+            || cursor.currentPosition.y != previousPosition.y) {
+            cursor.previousPosition = previousPosition;
+            Screen.updateCursor(cursor);
+        }
         Screen.drawScreen();
     }
 
@@ -47,6 +58,8 @@ module.exports = function(Screen, options) {
     }
 
     return {
-        initKeypressListener
+        initKeypressListener,
+        pauseKeypressListener,
+        resumeKeypressListener
     };
 }

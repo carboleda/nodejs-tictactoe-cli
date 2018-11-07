@@ -14,10 +14,7 @@ module.exports = function (socket, options) {
 
     async function init() {
         SEPTUP.nickName = await makeQuestion('Nickname: ');
-        SEPTUP.createOrJoin = await makeQuestion(`You want to do?
-            1. Create new match
-            2. Join a game
-            `);
+        SEPTUP.createOrJoin = await makeQuestion(`You want to do?\n1. Create new match\n2. Join a game`);
         if(SEPTUP.createOrJoin == '1') {
             socket.emit('new match', SEPTUP);
             //rl.close();
@@ -46,9 +43,7 @@ module.exports = function (socket, options) {
         });
         return rbSelectMatch.run();*/
         const matchesChooise = matches.map((match, index) => `${index + 1}. ${match}`);
-        const matchIndex = await makeQuestion(`Select a match:
-            ${matchesChooise.join('\n')}
-            `);
+        const matchIndex = await makeQuestion(`Select a match:`, matchesChooise);
         SEPTUP.matchName = matches[+matchIndex - 1];
         socket.emit('join to match', SEPTUP);
         //rl.close();
@@ -72,11 +67,11 @@ function askCreateOrJoin() {
     return rbCreateOrJoin.run();
 }
 
-function makeQuestion(q) {
+function makeQuestion(q, choices = []) {
     return new Promise((resolve, reject) => {
         Utilities.clearScreen();
-        rl.question(q, answer => {
+        rl.question(`${q}${choices.length > 0 ? '\n' : ''} ${choices.join('\n')}`, answer => {
             resolve(answer);
-        })
+        });
     });
 }
