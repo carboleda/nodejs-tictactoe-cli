@@ -1,4 +1,6 @@
-# nodejs-triqui
+# nodejs-tictactoe-cli
+
+![nodejs-tictactoe-cli game](https://raw.githubusercontent.com/carboleda/nodejs-tictactoe-cli/master/docs/play.gif)
 
 https://stackoverflow.com/questions/29664085/nodejs-how-to-display-table-structured-dashboard-in-console
 
