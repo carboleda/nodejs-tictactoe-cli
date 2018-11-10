@@ -7,5 +7,10 @@ module.exports = {
         GAMER1_MARK: 'O',
         GAMER2_CURSOR: '⦿',
         GAMER2_MARK: 'X',
+    },
+    GAME_STATE: {
+        IN_PROGRESS: '1',
+        FINISHED: '2',
+        TIED: '3',
     }
 }

@@ -1,7 +1,7 @@
 const colors = require('colors');
 const config = require('../../config/config.json');
 const Table = require('cli-table');
-const { GAMER_CHAR } = require('../helpers/constants');
+const { GAMER_CHAR, GAME_STATE } = require('../helpers/constants');
 const Utilities = require('../helpers/utilities');
 const Board = new Table(config.board);
 let UNSELECTED_POSITION;
@@ -10,6 +10,9 @@ let nickName;
 let playerPlace;
 let currentTurn;
 let boardDataMatrix = [];
+let currentGameState = {
+    state: GAME_STATE.IN_PROGRESS
+};
 let cursor = {
     currentPosition: { x: 1, y: 1 },
     previousPosition: null,
@@ -78,7 +81,17 @@ function updateBoardDataMatrix(newBoardDataMatrix, newCurrentTurn) {
     drawScreen();
 }
 
-function showMessage(msg) {
+function showSuccessMessage(msg) {
+    Utilities.clearScreen();
+    console.log(msg.bold.green);
+}
+
+function showWarningMessage(msg) {
+    Utilities.clearScreen();
+    console.log(msg.bold.yellow);
+}
+
+function showErrorMessage(msg) {
     Utilities.clearScreen();
     console.log(msg.bold.red);
 }
@@ -95,33 +108,75 @@ function getBoardDataMatrix() {
     return boardDataMatrix;
 }
 
-function drawScreen() {
-    Utilities.clearScreen();
+function drawHeader() {
+    console.log('..::Tic Tac Toe::..'.bold.green);
+    console.log('Gamer Nick:'.bold, nickName.bold.blue);
+    const cursorChar = GAMER_CHAR[`${GAMER}_CURSOR`];
+    const markChar = GAMER_CHAR[`${GAMER}_MARK`];
+    console.log('Controlls:'.bold, 'Cursor:'.bold, `${cursorChar},`, 'Mark:'.bold, markChar);
+}
+
+function drawFooter() {
+    console.log('How to use it?'.bold);
+    console.log('* Press up, down, left and right keys for move cursor');
+    console.log('* Press enter for mark a position');
+    console.log('* Press ctrl + c to exit');
+}
+
+function drawCurrentPosition() {
+    const { currentPosition } = cursor;
+    console.log('Current position:'.bold,
+        'X:'.bold, `${currentPosition.x}`.bold.blue,
+        'Y:'.bold, `${currentPosition.y}`.bold.magenta);
+    console.log(currentTurn === playerPlace
+        ? "IT'S YOUR TURN... 🤔 ".bold.green
+        : "WAITING FOR THE PLAY... 👀 ".bold.red);
+}
+
+function drawGameBorad() {
     // table is an Array, so you can `push`, `unshift`, `splice` and friends
     // Se eliminan todo el contenido del Board
     Board.splice(0);
     boardDataMatrix.forEach(row => {
         Board.push(row);
     });
-    console.log('..::Tic Tac Toe::..'.bold.green);
-    console.log('Gamer Nick:'.bold, nickName.bold.blue);
-    const cursorChar = GAMER_CHAR[`${GAMER}_CURSOR`];
-    const markChar = GAMER_CHAR[`${GAMER}_MARK`];
-    console.log('Controlls:'.bold, 'Cursor:'.bold, `${cursorChar},`, 'Mark:'.bold, markChar);
-    const { currentPosition } = cursor;
-    console.log('Current position:'.bold,
-        'X:'.bold, `${currentPosition.x}`.bold.blue,
-        'Y:'.bold, `${currentPosition.y}`.bold.magenta);
-    console.log(currentTurn === playerPlace
-        ? 'ES TU TURNO... 🤔'.bold.green
-        : 'ESPERANDO LA JUGADA... 👀'.bold.red);
     console.log('');
     console.log(Board.toString());
     console.log('');
-    console.log('How to use it?'.bold);
-    console.log('* Press up, down, left and right keys for move cursor');
-    console.log('* Press enter for mark a position');
-    console.log('* Press ctrl + c to exit');
+}
+
+function drawScreen() {
+    if(currentGameState.state === GAME_STATE.IN_PROGRESS) {
+        Utilities.clearScreen();
+        drawHeader();
+        drawCurrentPosition();
+        drawGameBorad();
+        drawFooter();
+    } else {
+        drawScreenWithState();
+    }
+}
+
+function drawScreenWithState(gameState = currentGameState) {
+    Utilities.clearScreen();
+    drawHeader();
+    console.log('');
+    if(gameState.state === GAME_STATE.FINISHED) {
+        if(gameState.winnerPlace === playerPlace) {
+            console.log("YOU ARE WINNER!!! 🏆 🎊 🎉 ".bold.green);
+        } else {
+            console.log("YOU LOSS!!! 😭 🤕 ☠️ ".bold.red);
+        }
+        gameState.winningPlay.forEach((position) => {
+            boardDataMatrix[position.y][position.x]
+                = Utilities.stripColors(boardDataMatrix[position.y][position.x]).bold.magenta;
+        });
+    } else if(gameState.state === GAME_STATE.TIED) {
+        console.log("THE GAME IS TIED 😩 ".bold.yellow);
+    }
+    currentGameState = gameState;
+    drawGameBorad();
+    drawFooter();
 }
 
 module.exports = {
@@ -129,10 +184,13 @@ module.exports = {
     updateCursor,
     markPosition,
     updateBoardDataMatrix,
-    showMessage,
+    showSuccessMessage,
+    showWarningMessage,
+    showErrorMessage,
     getCursor,
     getPlayerPlace,
     getBoardDataMatrix,
     clearScreen: Utilities.clearScreen,
     drawScreen,
+    drawScreenWithState,
 };

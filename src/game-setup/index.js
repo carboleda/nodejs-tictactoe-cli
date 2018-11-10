@@ -26,11 +26,17 @@ module.exports = function (socket, options) {
     }
 
     async function selectMatch(matches) {
-        const matchesChooise = matches.map((match, index) => `${index + 1}. ${match}`);
-        const matchIndex = await makeQuestion(`Select a match:`, matchesChooise);
-        SEPTUP.matchName = matches[+matchIndex - 1];
-        socket.emit('join to match', SEPTUP);
-        options.onFinish();
+        if(matches.length > 0) {
+            const matchesChooise = matches.map((match, index) => `${index + 1}. ${match}`);
+            const matchIndex = await makeQuestion(`Select a match:`, matchesChooise);
+            SEPTUP.matchName = matches[+matchIndex - 1];
+            socket.emit('join to match', SEPTUP);
+            options.onFinish();
+        } else {
+            Utilities.clearScreen();
+            console.log('There aren`t match availables');
+            console.log('Press ctrl + c to exit');
+        }
     }
 
     return {

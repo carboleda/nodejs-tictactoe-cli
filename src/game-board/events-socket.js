@@ -5,6 +5,10 @@ module.exports = function(socket, options) {
 
     socket.on('game full', options.onGameIsFull);
 
+    socket.on('game state', options.onChangeGameState);
+
+    socket.on('game reset', options.onGameReset);
+
     socket.on('waiting player', options.onWaitingPlayer);
 
     socket.on('disconnect', function() {
@@ -12,7 +16,6 @@ module.exports = function(socket, options) {
     });
 
     function emitPositionMarked(boardDataArray) {
-        //console.log('gameMatrix', gameMatrix);
         socket.emit('position marked', boardDataArray);
     }
 

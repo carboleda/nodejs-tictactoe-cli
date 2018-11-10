@@ -32,6 +32,13 @@ function getMarkers(markers) {
     return [ ...normal, ...colors ];
 }
 
+function arrayIndexToMatrixIndex(arrayIndex, matrixCols) {
+    return {
+        x: arrayIndex % matrixCols,
+        y: Math.round(Math.abs((arrayIndex - 1)/matrixCols))
+    }
+}
+
 //https://gist.github.com/KenanSulayman/4990953
 function clearScreen() {
     return process.stdout.write('\033c');
@@ -47,5 +54,6 @@ module.exports = {
     stripColors,
     getCursors,
     getMarkers,
+    arrayIndexToMatrixIndex,
     clearScreen
 };
