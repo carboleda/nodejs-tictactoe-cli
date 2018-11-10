@@ -14,7 +14,7 @@ questions.run()
         console.log(answers)
     });*/
 
-var List = require('prompt-list');
+/*var List = require('prompt-list');
 var list = new List({
     name: 'order',
     message: 'What would you like to order?',
@@ -26,9 +26,46 @@ var list = new List({
         { name: 'Sprite', disabled: 'Temporarily unavailable' },
         'Water'
     ]
+});*/
+
+/*var Input = require('prompt-input');
+var input = new Input({
+    name: 'first',
+    message: 'What is your name?'
 });
 
-// async
-list.ask(function (answer) {
-    console.log(answer);
-});
+// promise
+input.run()
+    .then(function (answers) {
+        console.log(answers);
+    });*/
+
+
+var Enquirer = require('enquirer');
+var enquirer = new Enquirer();
+var questions = [
+    {
+        type: 'input',
+        name: 'first',
+        message: 'What is your name?'
+    },
+    {
+        type: 'list',
+        name: 'order',
+        message: 'What would you like to order?',
+        choices: [
+            'Coke',
+            'Diet Coke',
+            'Cherry Coke',
+            { name: 'Sprite', disabled: 'Temporarily unavailable' },
+            'Water'
+        ]
+    }
+];
+
+enquirer.register('list', require('prompt-list'));
+
+enquirer.prompt(questions)
+    .then(function (answers) {
+        console.log(answers)
+    });
