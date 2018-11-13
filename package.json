@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-triqui-cli",
+  "name": "nodejs-tictactoe-cli",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
