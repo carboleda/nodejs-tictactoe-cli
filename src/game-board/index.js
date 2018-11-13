@@ -1,5 +1,5 @@
 const Utilities = require('../helpers/utilities');
-const { GAME_SIZE, GAME_STATE } = require('../helpers/constants');
+const { GAME_STATE } = require('../helpers/constants');
 const Screen = require('./screen');
 const EventsKeyboard = require('./events-keyboard')(Screen, {
     onMarkPosition
@@ -8,7 +8,7 @@ const EventsSocket = require('./events-socket');
 let mySocketConnection;
 
 function onInit(config) {
-    config.gameBoardData = Utilities.arrayToMatrix(config.gameBoardData, GAME_SIZE);
+    config.gameBoardData = Utilities.arrayToMatrix(config.gameBoardData, config.gameSize);
     Screen.setConfig(config);
     updateKeypressListenerStatus(config.currentTurn);
 }
@@ -16,7 +16,8 @@ function onInit(config) {
 function onReciveMarkPosition({ gameBoardData, currentTurn }) {
     //console.log('onReciveMarkPosition', gameBoardData, currentTurn);
     updateKeypressListenerStatus(currentTurn);
-    Screen.updateBoardDataMatrix(Utilities.arrayToMatrix(gameBoardData, GAME_SIZE), currentTurn);
+    const gameSize = Screen.getGameSize();
+    Screen.updateBoardDataMatrix(Utilities.arrayToMatrix(gameBoardData, gameSize), currentTurn);
 }
 
 function onGameIsFull() {
@@ -24,12 +25,13 @@ function onGameIsFull() {
 }
 
 function onChangeGameState(gameState) {
+    const gameSize = Screen.getGameSize();
     EventsKeyboard.pauseKeypressListener();
     if([GAME_STATE.FINISHED, GAME_STATE.TIED].indexOf(gameState.state) !== -1) {
-        Screen.updateBoardDataMatrix(Utilities.arrayToMatrix(gameState.gameBoardData, GAME_SIZE), gameState.currentTurn);
+        Screen.updateBoardDataMatrix(Utilities.arrayToMatrix(gameState.gameBoardData, gameSize), gameState.currentTurn);
         if(gameState.state == GAME_STATE.FINISHED) {
             gameState.winningPlay = gameState.winningPlay.map((positionIndex) => {
-                return Utilities.arrayIndexToMatrixIndex(positionIndex, GAME_SIZE);
+                return Utilities.arrayIndexToMatrixIndex(positionIndex, gameSize);
             });
         }
         Screen.drawScreenWithState(gameState);
@@ -37,9 +39,10 @@ function onChangeGameState(gameState) {
 }
 
 function onGameReset({ gameBoardData, currentTurn }) {
+    const gameSize = Screen.getGameSize();
     //console.log('onGameReset', gameBoardData, currentTurn);
     updateKeypressListenerStatus(currentTurn);
-    Screen.updateBoardDataMatrix(Utilities.arrayToMatrix(gameBoardData, GAME_SIZE), currentTurn);
+    Screen.updateBoardDataMatrix(Utilities.arrayToMatrix(gameBoardData, gameSize), currentTurn);
 }
 
 function onWaitingPlayer(matchName) {

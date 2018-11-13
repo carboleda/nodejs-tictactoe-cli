@@ -30,14 +30,15 @@ module.exports = function(Screen, options) {
 
     function onMoveCursor(direction) {
         const cursor = Screen.getCursor();
+        const gameSize = Screen.getGameSize();
         const previousPosition = { ...cursor.currentPosition };
         if (direction === 'left' && cursor.currentPosition.x > 0) {
             cursor.currentPosition.x--;
-        } else if (direction === 'right' && cursor.currentPosition.x < 2) {
+        } else if (direction === 'right' && cursor.currentPosition.x < gameSize - 1) {
             cursor.currentPosition.x++;
         } else if (direction === 'up' && cursor.currentPosition.y > 0) {
             cursor.currentPosition.y--;
-        } else if (direction === 'down' && cursor.currentPosition.y < 2) {
+        } else if (direction === 'down' && cursor.currentPosition.y < gameSize - 1) {
             cursor.currentPosition.y++;
         }
 

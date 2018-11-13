@@ -10,6 +10,7 @@ let nickName;
 let playerPlace;
 let currentTurn;
 let boardDataMatrix = [];
+let gameSize = 0;
 let currentGameState = {
     state: GAME_STATE.IN_PROGRESS
 };
@@ -23,6 +24,7 @@ function setConfig(config) {
     nickName = config.nickName;
     playerPlace = config.playerPlace;
     currentTurn = config.currentTurn;
+    gameSize = config.gameSize;
     const { unselectedPosition, gameBoardData } = config;
     GAMER = `GAMER${playerPlace}`;
     UNSELECTED_POSITION = `${unselectedPosition}`;
@@ -108,6 +110,10 @@ function getBoardDataMatrix() {
     return boardDataMatrix;
 }
 
+function getGameSize() {
+    return gameSize;
+}
+
 function drawHeader() {
     console.log('..::Tic Tac Toe::..'.bold.green);
     console.log('Gamer Nick:'.bold, nickName.bold.blue);
@@ -190,6 +196,7 @@ module.exports = {
     getCursor,
     getPlayerPlace,
     getBoardDataMatrix,
+    getGameSize,
     clearScreen: Utilities.clearScreen,
     drawScreen,
     drawScreenWithState,

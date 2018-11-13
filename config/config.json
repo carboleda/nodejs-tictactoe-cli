@@ -1,5 +1,6 @@
 {
-    "server": "http://localhost:3000",
+    "server_": "http://localhost:3000",
+    "server": "https://powerful-shore-33770.herokuapp.com/",
     "board": {
         "chars": {
             "top": "═", "top-mid": "╤", "top-left": "╔", "top-right": "╗"
