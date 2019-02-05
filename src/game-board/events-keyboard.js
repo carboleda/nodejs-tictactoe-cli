@@ -1,7 +1,7 @@
 //https://thisdavej.com/making-interactive-node-js-console-apps-that-listen-for-keypress-events/
 const readline = require('readline');
 let isKeypressListenerPaused = false;
-module.exports = function(Screen, options) {
+module.exports = function(GameBoardScreen, options) {
     function initKeypressListener() {
         readline.emitKeypressEvents(process.stdin);
         process.stdin.setRawMode(true);
@@ -15,7 +15,7 @@ module.exports = function(Screen, options) {
                     onMoveCursor(key.name);
                 }
             } else {
-                Screen.drawScreen();
+                GameBoardScreen.drawScreen();
             }
         });
     }
@@ -29,8 +29,8 @@ module.exports = function(Screen, options) {
     }
 
     function onMoveCursor(direction) {
-        const cursor = Screen.getCursor();
-        const gameSize = Screen.getGameSize();
+        const cursor = GameBoardScreen.getCursor();
+        const gameSize = GameBoardScreen.getGameSize();
         const previousPosition = { ...cursor.currentPosition };
         if (direction === 'left' && cursor.currentPosition.x > 0) {
             cursor.currentPosition.x--;
@@ -47,14 +47,14 @@ module.exports = function(Screen, options) {
         if(cursor.currentPosition.x != previousPosition.x
             || cursor.currentPosition.y != previousPosition.y) {
             cursor.previousPosition = previousPosition;
-            Screen.updateCursor(cursor);
+            GameBoardScreen.updateCursor(cursor);
         }
-        Screen.drawScreen();
+        GameBoardScreen.drawScreen();
     }
 
     function onMarkPosition() {
-        Screen.markPosition();
-        Screen.drawScreen();
+        GameBoardScreen.markPosition();
+        GameBoardScreen.drawScreen();
         options.onMarkPosition();
     }
 

@@ -1,4 +1,6 @@
+const { server } = require('../../config/config.json');
 const Utilities = require('../helpers/utilities');
+const historyMatches = require('./history-matches');
 const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
@@ -13,15 +15,18 @@ module.exports = function (socket, options) {
 
     async function init() {
         SEPTUP.nickName = await makeQuestion('Nickname: ');
-        SEPTUP.createOrJoin = await makeQuestion(`${SEPTUP.nickName}, what do you want to do?: `, [
+        SEPTUP.whatDoYouWant = await makeQuestion(`${SEPTUP.nickName}, what do you want to do?: `, [
             '1. Create new match',
-            '2. Join a match'
+            '2. Join a match',
+            '3. View my matches'
         ]);
-        if(SEPTUP.createOrJoin == '1') {
+        if(SEPTUP.whatDoYouWant == '1') {
             socket.emit('new match', SEPTUP);
             options.onFinish();
-        } else {
+        } else if(SEPTUP.whatDoYouWant == '2') {
             socket.emit('get available matches');
+        } else if(SEPTUP.whatDoYouWant == '3') {
+            historyMatches.showHistoryMatches(SEPTUP.nickName);
         }
     }
 

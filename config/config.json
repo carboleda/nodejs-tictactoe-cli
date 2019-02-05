@@ -1,6 +1,6 @@
 {
-    "server_": "http://localhost:3000",
-    "server": "https://powerful-shore-33770.herokuapp.com/",
+    "server": "http://localhost:3000",
+    "server_": "https://powerful-shore-33770.herokuapp.com/",
     "board": {
         "chars": {
             "top": "═", "top-mid": "╤", "top-left": "╔", "top-right": "╗"
@@ -9,5 +9,15 @@
             , "right": "║", "right-mid": "╢", "middle": "│"
         },
         "colAligns": ["middle", "middle", "middle"]
+    },
+    "matches": {
+        "chars": {
+            "top": "═", "top-mid": "╤", "top-left": "╔", "top-right": "╗"
+            , "bottom": "═", "bottom-mid": "╧", "bottom-left": "╚", "bottom-right": "╝"
+            , "left": "║", "left-mid": "╟", "mid": "─", "mid-mid": "┼"
+            , "right": "║", "right-mid": "╢", "middle": "│"
+        },
+        "colAligns": ["middle", "left", "middle", "middle"],
+        "head": ["Match date", "Opponent", "Board size", "Winning play"]
     }
 }

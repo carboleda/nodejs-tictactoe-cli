@@ -12,7 +12,7 @@ let currentTurn;
 let boardDataMatrix = [];
 let gameSize = 0;
 let currentGameState = {
-    state: GAME_STATE.IN_PROGRESS
+    state: GAME_STATE.WAITING
 };
 let cursor = {
     currentPosition: { x: 1, y: 1 },
@@ -30,7 +30,12 @@ function setConfig(config) {
     UNSELECTED_POSITION = `${unselectedPosition}`;
     boardDataMatrix = gameBoardData;
     boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = `${GAMER_CHAR[`${GAMER}_CURSOR`]}`;
+    currentGameState.state = GAME_STATE.IN_PROGRESS;
     drawScreen();
+}
+
+function gameReset() {
+    currentGameState.state = GAME_STATE.WAITING;
 }
 
 function updateCursor(newCursor) {
@@ -115,28 +120,34 @@ function getGameSize() {
 }
 
 function drawHeader() {
-    console.log('..::Tic Tac Toe::..'.bold.green);
-    console.log('Gamer Nick:'.bold, nickName.bold.blue);
-    const cursorChar = GAMER_CHAR[`${GAMER}_CURSOR`];
-    const markChar = GAMER_CHAR[`${GAMER}_MARK`];
-    console.log('Controlls:'.bold, 'Cursor:'.bold, `${cursorChar},`, 'Mark:'.bold, markChar);
+    try {
+        console.log('..::Tic Tac Toe::..'.bold.green);
+        console.log('Gamer Nick:'.bold, nickName.bold.blue);
+        const cursorChar = GAMER_CHAR[`${GAMER}_CURSOR`];
+        const markChar = GAMER_CHAR[`${GAMER}_MARK`];
+        console.log('Controlls:'.bold, 'Cursor:'.bold, `${cursorChar},`, 'Mark:'.bold, markChar);
+    } catch(e) {}
 }
 
 function drawFooter() {
-    console.log('How to use it?'.bold);
-    console.log('* Press up, down, left and right keys for move cursor');
-    console.log('* Press enter for mark a position');
-    console.log('* Press ctrl + c to exit');
+    try {
+        console.log('How to use it?'.bold);
+        console.log('* Press up, down, left and right keys for move cursor');
+        console.log('* Press enter for mark a position');
+        console.log('* Press ctrl + c to exit');
+    } catch(e) {}
 }
 
 function drawCurrentPosition() {
-    const { currentPosition } = cursor;
-    console.log('Current position:'.bold,
-        'X:'.bold, `${currentPosition.x}`.bold.blue,
-        'Y:'.bold, `${currentPosition.y}`.bold.magenta);
-    console.log(currentTurn === playerPlace
-        ? "IT'S YOUR TURN... 🤔 ".bold.green
-        : "WAITING FOR THE PLAY... 👀 ".bold.red);
+    try {
+        const { currentPosition } = cursor;
+        console.log('Current position:'.bold,
+            'X:'.bold, `${currentPosition.x}`.bold.blue,
+            'Y:'.bold, `${currentPosition.y}`.bold.magenta);
+        console.log(currentTurn === playerPlace
+            ? "IT'S YOUR TURN... 🤔 ".bold.green
+            : "WAITING FOR THE PLAY... 👀 ".bold.red);
+    } catch(e) {}
 }
 
 function drawGameBorad() {
@@ -158,7 +169,7 @@ function drawScreen() {
         drawCurrentPosition();
         drawGameBorad();
         drawFooter();
-    } else {
+    } else if([GAME_STATE.FINISHED, GAME_STATE.TIED].indexOf(currentGameState.state) !== -1) {
         drawScreenWithState();
     }
 }
@@ -187,6 +198,7 @@ function drawScreenWithState(gameState = currentGameState) {
 
 module.exports = {
     setConfig,
+    gameReset,
     updateCursor,
     markPosition,
     updateBoardDataMatrix,

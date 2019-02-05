@@ -8,6 +8,7 @@ module.exports = {
         GAMER2_MARK: 'X',
     },
     GAME_STATE: {
+        WAITING: '0',
         IN_PROGRESS: '1',
         FINISHED: '2',
         TIED: '3',
