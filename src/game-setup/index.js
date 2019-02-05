@@ -1,6 +1,6 @@
 const { server } = require('../../config/config.json');
 const Utilities = require('../helpers/utilities');
-const historyMatches = require('./history-matches');
+const matchesHistory = require('./matches-history');
 const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
@@ -26,7 +26,7 @@ module.exports = function (socket, options) {
         } else if(SEPTUP.whatDoYouWant == '2') {
             socket.emit('get available matches');
         } else if(SEPTUP.whatDoYouWant == '3') {
-            historyMatches.showHistoryMatches(SEPTUP.nickName);
+            matchesHistory.showMatchesHistory(SEPTUP.nickName);
         }
     }
 
@@ -66,7 +66,7 @@ function makeQuestion(question, choices = []) {
             //Si la pregunta NO tiene opciones o tienes la respuesta es valida
             if(!hasChoices
                 || (hasChoices && +answer >= 1 && +answer <= choices.length)) {
-                    //Se resuelve la promesa enviando la resputa
+                    //Se resuelve la promesa enviando la respuesta
                 resolve(answer);
             } else {
                 //De lo contrario se vuelve a preguntar hasta obtener una respuesta correcta

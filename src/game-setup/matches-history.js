@@ -50,7 +50,7 @@ function drawScreen(nickName, matches) {
     drawFooter();
 }
 
-function showHistoryMatches(nickName) {
+function showMatchesHistory(nickName) {
     axios({
         method: 'GET',
         url: `${config.server}/player/matches/${nickName}`
@@ -65,5 +65,5 @@ function showHistoryMatches(nickName) {
 }
 
 module.exports = {
-    showHistoryMatches
+    showMatchesHistory
 };
