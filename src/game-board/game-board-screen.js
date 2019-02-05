@@ -72,8 +72,15 @@ function updateCursor(newCursor) {
 }
 
 function markPosition() {
-    boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = GAMER_CHAR[`${GAMER}_MARK`];
+    const mCursors = Utilities.getCursors(GAMER_CHAR);
+    if(mCursors.indexOf(boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x]) !== -1) {
+        boardDataMatrix[cursor.currentPosition.y][cursor.currentPosition.x] = GAMER_CHAR[`${GAMER}_MARK`];
+        return true;
+    }
+
     drawScreen();
+
+    return false;
 }
 
 function updateBoardDataMatrix(newBoardDataMatrix, newCurrentTurn) {

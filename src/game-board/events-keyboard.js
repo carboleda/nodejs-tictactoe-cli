@@ -53,9 +53,10 @@ module.exports = function(GameBoardScreen, options) {
     }
 
     function onMarkPosition() {
-        GameBoardScreen.markPosition();
-        GameBoardScreen.drawScreen();
-        options.onMarkPosition();
+        const success = GameBoardScreen.markPosition();
+        if(success) {
+            options.onMarkPosition();
+        }
     }
 
     return {
