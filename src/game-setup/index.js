@@ -13,22 +13,25 @@ const SEPTUP = {
 
 module.exports = function (socket, options) {
     socket.on('receive available matches', selectMatch);
+    
+    const gameOptions = [
+        { id: '1', title: '1. Create new match', action: () => {
+            socket.emit('new match', SEPTUP);
+            options.onFinish();
+        }},
+        { id: '2', title: '2. Join a match', action: () => {
+            socket.emit('get available matches');
+        }},
+        { id: '3', title: '3. View my matches', action: () => {
+            matchesHistory.showMatchesHistory(SEPTUP.nickName);
+        }}
+    ];
 
     async function init() {
         SEPTUP.nickName = await makeQuestion('Nickname: ');
-        SEPTUP.whatDoYouWant = await makeQuestion(`${SEPTUP.nickName}, what do you want to do?: `, [
-            '1. Create new match',
-            '2. Join a match',
-            '3. View my matches'
-        ]);
-        if(SEPTUP.whatDoYouWant == '1') {
-            socket.emit('new match', SEPTUP);
-            options.onFinish();
-        } else if(SEPTUP.whatDoYouWant == '2') {
-            socket.emit('get available matches');
-        } else if(SEPTUP.whatDoYouWant == '3') {
-            matchesHistory.showMatchesHistory(SEPTUP.nickName);
-        }
+        SEPTUP.whatDoYouWant = await makeQuestion(`${SEPTUP.nickName}, what do you want to do?: `,
+            gameOptions.map(option => option.title));
+        gameOptions.find(option => option.id === SEPTUP.whatDoYouWant).action();
     }
 
     async function selectMatch(matches) {
