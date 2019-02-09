@@ -13,16 +13,16 @@ const SEPTUP = {
 
 module.exports = function (socket, options) {
     socket.on('receive available matches', selectMatch);
-    
+
     const gameOptions = [
-        { id: '1', title: '1. Create new match', action: () => {
+        { id: '1', title: 'Create new match', action: () => {
             socket.emit('new match', SEPTUP);
             options.onFinish();
         }},
-        { id: '2', title: '2. Join a match', action: () => {
+        { id: '2', title: 'Join a match', action: () => {
             socket.emit('get available matches');
         }},
-        { id: '3', title: '3. View my matches', action: () => {
+        { id: '3', title: 'View my matches', action: () => {
             matchesHistory.showMatchesHistory(SEPTUP.nickName);
         }}
     ];
@@ -30,7 +30,7 @@ module.exports = function (socket, options) {
     async function init() {
         SEPTUP.nickName = await makeQuestion('Nickname: ');
         SEPTUP.whatDoYouWant = await makeQuestion(`${SEPTUP.nickName}, what do you want to do?: `,
-            gameOptions.map(option => option.title));
+            gameOptions.map(option => `${option.id}. ${option.title}`));
         gameOptions.find(option => option.id === SEPTUP.whatDoYouWant).action();
     }
 
