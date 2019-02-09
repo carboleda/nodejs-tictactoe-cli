@@ -21,7 +21,7 @@ function onReciveMarkPosition({ gameBoardData, currentTurn }) {
 }
 
 function onGameIsFull() {
-    GameBoardScreen.showErrorMessage('There not is places in this match');
+    GameBoardScreen.showErrorMessage('There are no places in this match');
 }
 
 function onChangeGameState(gameState) {
