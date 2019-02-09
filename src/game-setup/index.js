@@ -1,6 +1,6 @@
 const { server } = require('../../config/config.json');
 const Utilities = require('../helpers/utilities');
-const matchesHistory = require('./matches-history');
+const matchesHistory = require('../matches-history');
 const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
@@ -10,6 +10,7 @@ const SEPTUP = {
     nickName: '',
     matchName: null
 };
+
 module.exports = function (socket, options) {
     socket.on('receive available matches', selectMatch);
 
